@@ -14,6 +14,9 @@ extern WriteFile		; Kernel32 function to write UTF-8 strings
 extern WriteConsoleW	; Kernel32 function to write Unicode (UTF-16/UTF-32) strings 	
 						; [rcx: HANDLE hConsoleOutput, rdx: [in] LPVOID lpUnicodeBuffer, r8: DWORD nNumberOfCharsToWrite, r9: LPDWORD lpNumberOfCharsWritten]
 
+extern AllocConsole      ; Kernel32 function to allocate a new console for the calling process
+                         ; Typically used to create a console window for applications that do not have one
+                         ; No parameters, returns a BOOL indicating success (nonzero) or failure (zero)
 
 [section .text]
 

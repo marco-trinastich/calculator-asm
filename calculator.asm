@@ -15,6 +15,8 @@ global start
 
 ; Start - App entrypoint
 start:    
+	call 	AllocConsole
+
 	call	.showWelcome	
 	call	.showHelp
 	call	.mainloop

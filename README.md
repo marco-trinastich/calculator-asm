@@ -56,7 +56,7 @@ To build and run this project, you will need the following tools and environment
 > **Tip**: You can install the required tools using [Chocolatey](https://chocolatey.org/install). Run the following command in an elevated PowerShell terminal:
 
 ```bash
-choco install nasm visualstudio2022buildtools visualstudio2022-workload-vctools
+choco install nasm visualstudio2022buildtools visualstudio2022-workload-vctools make
 ```
 
 ### Clone the Repository
