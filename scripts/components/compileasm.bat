@@ -1,3 +1,7 @@
+REM ASM Build Tools - Copyright (c) 2023 Marco Trinastich
+REM Licensed under GNU GPL v3 - see LICENSE file for details
+REM ----------------------------------------
+
 @echo off
 
 REM ----------------------------------------

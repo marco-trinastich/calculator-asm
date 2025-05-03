@@ -1,3 +1,6 @@
+; Calculator ASM - Copyright (c) 2023 Marco Trinastich
+; Licensed under GNU GPL v3 - see LICENSE file for details
+
 ; ===============================
 ; Calculator ASM app entrypoint
 ; ===============================

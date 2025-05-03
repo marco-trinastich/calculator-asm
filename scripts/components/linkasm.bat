@@ -1,3 +1,7 @@
+REM ASM Build Tools - Copyright (c) 2023 Marco Trinastich
+REM Licensed under GNU GPL v3 - see LICENSE file for details
+REM ----------------------------------------
+
 @echo off
 
 REM ----------------------------------------
@@ -52,7 +56,7 @@ if not "%~1"=="" (
 
 REM Step 3: Link the object file to create the executable
 
-echo Linking %input_file_unquoted% (Win64 app)...
+echo Linking %input_file_unquoted% (Win64/x86-64 app)...
 echo.
 
 REM Call vsexec.bat to set up the Visual Studio environment and execute the linker

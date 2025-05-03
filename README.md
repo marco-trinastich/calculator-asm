@@ -79,7 +79,7 @@ cd calculator-asm
      ```
      C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
      ```
-   - Alternatively, you can manually specify the `VS_VERSION` (e.g., `VS_VERSION=2017`, `VS_VERSION=2022`) or provide the full path to `vcvarsall.bat` using the `VCVARSALL_PATH` variable in the `make` command.
+   - Alternatively, you can manually provide the full path to `vcvarsall.bat` using the `VCVARSALL_PATH` variable in the `make` command.
 
 ### Building the Application
 
@@ -106,7 +106,12 @@ make
    # Example Output (for Visual Studio 2022):
    # C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat
 
-   # Step 2: Call vcvarsall.bat with the amd64 argument to set up the environment
+   # Step 2: Call vcvarsall.bat to set up the environment for targeting AMD64
+   # The argument format is [host]_[target] (or just [target] when host=target)
+   # Examples based on your system architecture:
+   #   - x86_amd64   (for 32-bit host systems)
+   #   - amd64       (for 64-bit AMD/Intel systems)
+   #   - arm64_amd64 (for ARM64 host systems)
    call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
    ```
 
