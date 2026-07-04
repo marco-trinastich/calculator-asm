@@ -60,7 +60,8 @@ echo Linking %input_file_unquoted% (Win64/x86-64 app)...
 echo.
 
 REM Call vsexec.bat to set up the Visual Studio environment and execute the linker
-call "%vsexec_path%" link /OUT:"%output_file%" %additional_options% "%input_file%"
+REM (/DEBUG emits the .pdb symbol file for source-level debugging)
+call "%vsexec_path%" link /DEBUG /OUT:"%output_file%" %additional_options% "%input_file%"
 
 REM Check if the linking process succeeded
 if errorlevel 1 (

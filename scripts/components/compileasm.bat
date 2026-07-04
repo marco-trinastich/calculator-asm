@@ -30,6 +30,7 @@ REM Step 2: Extract input file, output file, and additional options
 REM Extract the input and output file names from the arguments
 set input_file="%~1"
 set input_file_name=%~nx1
+set "input_dir=%~dp1"
 set output_file="%~2"
 
 REM Extract additional options (everything after %2)
@@ -47,8 +48,8 @@ REM Step 3: Compile the assembly file
 
 echo Compiling %input_file_name% (Win64/x86-64 arch)...
 
-REM Run NASM to compile the assembly file
-nasm -f win64 "%input_file%" -o "%output_file%" %additional_options% -g
+REM Run NASM to compile the assembly file (-I resolves %include relative to the source dir)
+nasm -f win64 "%input_file%" -I "%input_dir%." -o "%output_file%" %additional_options% -g
 if errorlevel 1 (
     echo.
     echo Error: Compilation failed.

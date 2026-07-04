@@ -6,11 +6,11 @@ VSEXEC_PATH = scripts\components\vsexec.bat
 
 # Build rules
 calculator: calculator.obj
-	$(if $(VCVARSALL_PATH),set "VCVARSALL_PATH=$(VCVARSALL_PATH)" &&) "$(VSEXEC_PATH)" link /OUT:out\calculator.exe out\calculator.obj
+	$(if $(VCVARSALL_PATH),set "VCVARSALL_PATH=$(VCVARSALL_PATH)" &&) "$(VSEXEC_PATH)" link /DEBUG /OUT:out\calculator.exe out\calculator.obj
 
-calculator.obj: calculator.asm
+calculator.obj: src\calculator.asm
 	if not exist out mkdir out
-	nasm -f win64 calculator.asm -o out\calculator.obj -g
+	nasm -f win64 src\calculator.asm -I src\ -o out\calculator.obj -g
 
 .PHONY: clean
 clean:
