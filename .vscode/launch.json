@@ -1,0 +1,32 @@
+{
+    // cppvsdbg (ms-vscode.cpptools). .asm line breakpoints need the PDB
+    // (NASM `-g` + linker `/DEBUG`); if a line breakpoint fails, use Disassembly.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // Rebuild via preLaunchTask, then debug.
+            "name": "Build & Debug (x64)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/out/calculator.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "build"
+        },
+        {
+            // Debug the existing out\ binary without rebuilding.
+            "name": "Debug (x64)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/out/calculator.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal"
+        }
+    ]
+}

@@ -17,7 +17,7 @@ if not "%VCVARSALL_PATH%"=="" (
 )
 
 REM Define paths
-set "VSWHERE_PATH=C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+set "VSWHERE_PATH=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 set "VCVARSALL_PATH="
 
 REM Step 1: Check if vswhere.exe exists

@@ -12,6 +12,7 @@ A simple yet powerful calculator application written in x86-64 assembly for Wind
    - [Clone the Repository](#clone-the-repository)
    - [Setup Steps](#setup-steps)
    - [Building the Application](#building-the-application)
+   - [Building and Debugging in VS Code](#building-and-debugging-in-vs-code)
 5. [Usage](#usage)
    - [How to Run](#how-to-run)
 6. [Development](#development)
@@ -95,7 +96,7 @@ make
 
 1. **Assemble the Object File**:
    ```bash
-   nasm -f win64 calculator.asm -o out\calculator.obj -g
+   nasm -f win64 src\calculator.asm -I src\ -o out\calculator.obj -g
    ```
 2. **Set Up the Build Environment**:
 
@@ -117,10 +118,21 @@ make
 
 3. **Link the Executable**:
    ```bash
-   link /entry:start /subsystem:console out\calculator.obj kernel32.lib
+   link /DEBUG /entry:start /subsystem:console out\calculator.obj kernel32.lib
    ```
 
-**Note**: If you encounter issues with the `makefile`, you can use the batch script `scripts/createapp.bat calculator.asm` as an alternative. Alternatively, you may execute the build steps manually as described above.
+   > **Note**: `/DEBUG` makes the linker emit a `.pdb` symbol file. Combined with the `-g` flag used at the assembly step (which stores CodeView line info in the object), it enables source-level debugging on the `.asm` files.
+
+**Note**: If you encounter issues with the `makefile`, you can use the batch script `scripts/createapp.bat src\calculator` as an alternative. Alternatively, you may execute the build steps manually as described above.
+
+### Building and Debugging in VS Code
+
+The repository ships committed VS Code helpers under `.vscode/` for convenience — they run the **exact same `make`** as the console, so behavior is identical either way.
+
+- **Build**: open the Command Palette → _Tasks: Run Task_ → `build` (or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>). Other tasks: `clean` and `rebuild`.
+- **Debug**: press <kbd>F5</kbd> to launch `out\calculator.exe` under the `cppvsdbg` debugger (requires the [C/C++ extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)). Instruction-level stepping, registers and memory (via the _Disassembly_ view) always work; breakpoints on `.asm` source lines rely on the PDB produced by the `/DEBUG` link step above.
+
+> **Note on host tooling**: the build always uses the **native host compiler for maximum speed**. `scripts/components/vsexec.bat` auto-detects the host architecture (AMD64 / x86 / ARM64) via `vswhere` → `vcvarsall.bat` and selects the matching native toolchain. The build target stays **x64** in all cases (the assembly source is Win64-specific).
 
 ## Usage
 
@@ -186,6 +198,7 @@ When working with assembly on Windows, keep the following in mind:
 ### Debugging
 
 - **[x64dbg](https://x64dbg.com/)**: A powerful debugger for Windows x86/x64 applications. It is highly recommended for debugging and reverse engineering assembly code.
+- **VS Code (`cppvsdbg`)**: for an integrated experience, press <kbd>F5</kbd> — see [Building and Debugging in VS Code](#building-and-debugging-in-vs-code).
 
 ## Acknowledgments
 

@@ -1,0 +1,5 @@
+{
+    // Allow breakpoints in .asm files (unrecognized language) so line
+    // breakpoints work when debugging calculator.asm with cppvsdbg.
+    "debug.allowBreakpointsEverywhere": true
+}
