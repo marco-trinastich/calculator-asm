@@ -17,8 +17,10 @@ extern ExitProcess      ; Kernel32 function to Exit Process
 global start
 
 ; Start - App entrypoint
-start:    
-	call 	AllocConsole
+start:
+	sub		rsp, win64_home_space			; Reserve Win64 Home Space in Stack
+	call 	AllocConsole					; Allocate a console for the process
+	add		rsp, win64_home_space			; Release Win64 Home Space from Stack
 
 	call	.showWelcome	
 	call	.showHelp
@@ -31,7 +33,7 @@ start:
 .mainloop:
 	call	.askChoice
 	mov		rdx, read_buffer
-	xor		r8, r8
+	mov		r8d, dword [rel bytes_read]		; Echo exactly what was read (chars + \r\n), single WriteFile
 	call	printUtf8String
 	jmp		.mainloop
 

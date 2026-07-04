@@ -53,17 +53,22 @@ readString:
 ; @param r8     		-> read length
 ; @return read_buffer	-> read char/string
 .exec:
+	push	r12								; Store preserved register
+	mov		r12, r8							; Backup read length (r8 is volatile, GetStdHandle may clobber it)
     call    prepareStdInHandle				; Get StdHandle
 
     sub     rsp, win64_home_space			; Reserve Win64 Home Space in Stack
 
-    mov     rcx, [rel stdin]				; rcx => Set StdIn handle
-    mov		rdx, read_buffer				; rdx => Set read buffer pointer
-    mov     r9,  bytes_read  				; r9  => Set read char/bytes pointer
+    mov     rcx, [rel stdin]				; rcx => Set StdIn handle (1st arg)
+    mov		rdx, read_buffer				; rdx => Set read buffer pointer (2nd arg)
+	mov		r8, r12							; r8  => Restore read length (3rd arg)
+    mov     r9,  bytes_read  				; r9  => Set read char/bytes pointer (4th arg)
+	mov		qword [rsp+32], 0				; [rsp+32] => lpOverlapped = NULL (console has no overlapped I/O) (5th arg)
 	call    ReadFile						; Read from StdIn using ReadFile
 
     add     rsp, win64_home_space			; Release Win64 Home Space from Stack
 
+	pop		r12								; Restore preserved register
 	ret
 
 
@@ -148,14 +153,21 @@ _printString:
 ; @param rdx	-> message pointer
 ; @param r8		-> number of chars to write (UTF-8 = 1 byte per char / Unicode = 1 word per char)
 .exec:
-	push	r13								; Store preserved registry and use it since rax will be overwritten
-	mov		r13, rax
+	push	r12								; Store preserved registers
+	push	r13
+	push	r14
+	mov		r13, rax						; Backup unicode flag (rax will be overwritten)
+	mov		r12, rdx						; Backup message pointer (rdx is volatile, GetStdHandle may clobber it)
+	mov		r14, r8							; Backup message length (r8 is volatile, GetStdHandle may clobber it)
     call    prepareStdOutHandle				; Get StdHandle
 
     sub     rsp, win64_home_space			; Reserve Win64 Home Space in Stack
 
-    mov     rcx, [rel stdout]				; rcx => Set StdOut pointer
-    mov     r9, bytes_written				; r9  => Set bytesWritten/charsWritten pointer
+    mov     rcx, [rel stdout]				; rcx => Set StdOut pointer (1st arg)
+	mov		rdx, r12						; rdx => Restore message pointer (2nd arg)
+	mov		r8, r14							; r8  => Restore message length (3rd arg)
+    mov     r9, bytes_written				; r9  => Set bytesWritten/charsWritten pointer (4th arg)
+	mov		qword [rsp+32], 0				; [rsp+32] => lpOverlapped = NULL (console has no overlapped I/O) (5th arg)
 	test	r13, r13						; Check unicode flag
 	jz		.execUtf8						; if 0 = use WriteFile (UTF-8) else WriteConsoleW (Unicode)
 
@@ -173,7 +185,9 @@ _printString:
 	add     rsp, win64_home_space			; Release Win64 Home Space from Stack
 	
 	mov		rax, r13						; Restore unicode flag in rax (needed by LoopChars)
-	pop		r13								; Restore preserved register
+	pop		r14								; Restore preserved registers
+	pop		r13
+	pop		r12
 
 	ret
 
@@ -197,8 +211,8 @@ copyChar:
 .copyLoop:	
 	mov		r14b, byte [r12]					
 	mov		byte [r13], r14b				; Store byte into dst buffer
-	add		r12b, 1
-	add		r13b, 1
+	add		r12, 1							; Advance full 64-bit pointers (low-byte add would wrap at 256-byte boundary)
+	add		r13, 1
 	cmp		r15b, byte [rel write_char_size]
 	je		.end 							; End if format is UTF-8 (1 byte chars) else continue
 	add		r15b, 1
