@@ -9,6 +9,8 @@
 
 
 %include "utils/ioutils.asm"
+%include "utils/strutils.asm"
+%include "core/evaluator.asm"
 %include "models/messages/messages.asm"
 extern ExitProcess      ; Kernel32 function to Exit Process
 
@@ -32,11 +34,45 @@ start:
 ; Mainloop - App main loop
 .mainloop:
 	call	.askChoice
-	mov		rdx, read_buffer
-	mov		r8d, dword [rel bytes_read]		; Echo exactly what was read (chars + \r\n), single WriteFile
-	call	printUtf8String
-	jmp		.mainloop
+	call	.processChoice
+	test	rax, rax						; Check quit flag
+	jz		.mainloop						; Loop until quit is requested
 
+	ret
+
+
+; ProcessChoice - Interprets the read input and dispatches the matching action
+; @return rax	-> 0 = continue / 1 = quit requested
+.processChoice:
+	mov		ecx, dword [rel bytes_read]
+	test	rcx, rcx						; EOF or failed read => quit (avoids prompt spinning)
+	jz		.processChoiceQuit
+	sub		rcx, 2							; Effective length without trailing \r\n
+	jle		.processChoiceEnd				; Empty input => just re-prompt
+
+	cmp		rcx, 1							; Single-char commands
+	jne		.processChoiceExpr
+	mov		r9b, byte [rel read_buffer]
+	cmp		r9b, 'q'
+	je		.processChoiceQuit
+	cmp		r9b, 'h'
+	jne		.processChoiceExpr
+	call	.showHelp
+	jmp		.processChoiceEnd
+
+; ProcessChoiceExpr - Everything else is evaluated as an arithmetic expression
+.processChoiceExpr:
+	mov		rdx, read_buffer
+	mov		r8, rcx							; Expression length (without \r\n)
+	call	evaluateExpression
+
+.processChoiceEnd:
+	xor		rax, rax						; Continue main loop
+	ret
+
+; ProcessChoiceQuit - Signals the main loop to exit
+.processChoiceQuit:
+	mov		rax, 1							; Quit requested
 	ret
 
 

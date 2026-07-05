@@ -32,3 +32,7 @@ msgHelp				db   "=====> Usage info <=====", 0x0d, 0x0a, 0x0d, 0x0a,
 msgHelp_len			equ $-msgHelp
 msgChoice			db   "Please insert a command or an arithmetic expression and press enter:", 0x0d, 0x0a
 msgChoice_len		equ $-msgChoice
+msgErrInvalid		db   "Error: invalid command or expression", 0x0d, 0x0a
+msgErrInvalid_len	equ $-msgErrInvalid
+msgErrDivZero		db   "Error: division by zero", 0x0d, 0x0a
+msgErrDivZero_len	equ $-msgErrDivZero
