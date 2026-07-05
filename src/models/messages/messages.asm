@@ -28,6 +28,8 @@ msgHelp				db   "=====> Usage info <=====", 0x0d, 0x0a, 0x0d, 0x0a,
 					db   "		* subtraction: 		n1 - n2", 0x0d, 0x0a,
 					db   "		* multiplication: 	n1 * n2", 0x0d, 0x0a,
 					db   "		* division: 		n1 / n2", 0x0d, 0x0a,
+					db   "		* parentheses: 		( n1 + n2 ) * n3", 0x0d, 0x0a,
+					db   "		* decimals: 		n1.5 (up to 6 digits)", 0x0d, 0x0a,
 					db   "		* a combination of the above", 0x0d, 0x0a, 0x0d, 0x0a
 msgHelp_len			equ $-msgHelp
 msgChoice			db   "Please insert a command or an arithmetic expression and press enter:", 0x0d, 0x0a
@@ -36,3 +38,5 @@ msgErrInvalid		db   "Error: invalid command or expression", 0x0d, 0x0a
 msgErrInvalid_len	equ $-msgErrInvalid
 msgErrDivZero		db   "Error: division by zero", 0x0d, 0x0a
 msgErrDivZero_len	equ $-msgErrDivZero
+msgErrOverflow		db   "Error: numeric overflow", 0x0d, 0x0a
+msgErrOverflow_len	equ $-msgErrOverflow

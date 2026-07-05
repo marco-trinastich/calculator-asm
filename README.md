@@ -32,11 +32,13 @@ The project was inspired by the Win64 HelloWorld example provided by [mcandre](h
 
 ## Features
 
-- **Basic Arithmetic Operations**: Supports addition, subtraction, multiplication, and division.
+- **Arithmetic Expressions**: Supports addition, subtraction, multiplication and division, with standard operator precedence and nested parentheses (e.g. `(2 + 3) * 4`).
+- **Fixed-Point Decimals**: All arithmetic runs on 64-bit fixed-point values with 6 decimal digits (range ~±9.2 × 10¹²), computed via 128-bit `imul`/`idiv` intermediates.
+- **Robust Error Handling**: Detects invalid expressions, division by zero and numeric overflow without crashing.
 - **Command-Line Interface**: Accepts user input for calculations and commands.
 - **Help Menu**: Displays usage instructions and supported operations.
 - **Unicode and UTF-8 Support**: Handles both Unicode and UTF-8 strings for input and output.
-- **Educational Focus**: Demonstrates key concepts of x86-64 assembly programming, including register usage, system calls, and memory management.
+- **Educational Focus**: Demonstrates key concepts of x86-64 assembly programming, including register usage, calling conventions (Win64 ABI), recursive descent parsing, system calls, and memory management.
 
 ## Screenshots
 
@@ -145,7 +147,14 @@ The repository ships committed VS Code helpers under `.vscode/` for convenience 
 2. Follow the on-screen instructions:
    - Enter `h` to display the help menu.
    - Enter `q` to quit the application.
-   - Enter an arithmetic expression (e.g., `5 + 3`) to calculate the result.
+   - Enter an arithmetic expression to calculate the result, for example:
+     ```
+     5 + 3        = 8
+     10 / 4       = 2.5
+     2 + 3 * 4    = 14
+     (2 + 3) * 4  = 20
+     -1.5 * (2 - 0.5)  = -2.25
+     ```
 
 ## Development
 
